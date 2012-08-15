@@ -17,8 +17,8 @@ Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
   #  ensure that that e1 occurs before e2.
   #  page.content  is the entire content of the page as a string.
   #  flunk "Unimplemented"
-  movies = page.all("table#movies tbody tr td[1]").map { |t| t.text }
-  assert movies.index(e1) < movies.index(e2)
+  titles = page.all("table#movies tbody tr td[1]").map { |t| t.text }
+  assert titles.index(e1) < titles.index(e2)
 end
 
 # Make it easier to express checking or unchecking several boxes at once
