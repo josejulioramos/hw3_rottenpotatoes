@@ -32,11 +32,36 @@ When /I (un)?check the following ratings: (.*)/ do |uncheck, rating_list|
   rating_list.split(",").each do |col|
     col = col.strip
     if uncheck == "un"
-      step %Q{I uncheck "ratings_#{field}"}
-      step %Q{the "ratings_#{field}" checkbox should not be checked}
+      step %Q{I uncheck "ratings_#{col}"}
+      step %Q{the "ratings_#{col}" checkbox should not be checked}
     else
-      step %Q{I check "ratings_#{field}"}
-      step %Q{the "ratings_#{field}" checkbox should be checked}
+      step %Q{I check "ratings_#{col}"}
+      step %Q{the "ratings_#{col}" checkbox should be checked}
     end
   end
 end
+
+Then /^I should see the following ratings: (.*)/ do |rating_list|
+  ratings = page.all("table#movies tbody tr td[2]").map! {|t| t.text}
+  rating_list.split(",").each do |col|
+    assert ratings.include?(col.strip)
+  end
+end
+
+Then /^I should not see the following ratings: (.*)/ do |rating_list|
+  ratings = page.all("table#movies tbody tr td[2]").map! {|t| t.text}
+  rating_list.split(",").each do |col|
+    assert !ratings.include?(col.strip)
+  end
+end
+
+Then /^I should see all of the movies$/ do
+  records = page.all("table#movies tbody tr td[1]").map! {|t| t.text}
+  assert ( records.size == Movie.all.count ) 
+end
+
+Then /^I should see no movies$/ do
+  records = page.all("table#movies tbody tr td[1]").map! {|t| t.text}
+  assert records.size == 0 
+end
+
